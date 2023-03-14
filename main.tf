@@ -14,7 +14,7 @@ provider "azurerm" {
 resource "azurerm_managed_disk" "myMD" {
   name                 = "myManagedDisk"
   location             = var.location
-  resource_group_name  = var.ResourceGroupname
+  resource_group_name  = var.resourceGroupName
   storage_account_type = "Standard_LRS"
   create_option        = "Empty"
   disk_size_gb         = "256"
@@ -24,17 +24,17 @@ resource "azurerm_managed_disk" "myMD" {
   }
 }
 data "azurerm_image" "myImage" {
-  name                = var.imagename
-  resource_group_name = var.ResourceGroupname
+  name                = var.imageName
+  resource_group_name = var.resourceGroupName
 }
 
 
 # Create virtual network
-resource "azurerm_virtual_network" "virtualnetwork" {
+resource "azurerm_virtual_network" "virtualNetwork" {
   name                = "${var.prefix}Network"
   address_space       = ["10.0.0.0/22"]
   location            = var.location
-  resource_group_name = var.ResourceGroupname
+  resource_group_name = var.resourceGroupName
 
   tags = {
     Name = "tagging-policy"
@@ -43,9 +43,9 @@ resource "azurerm_virtual_network" "virtualnetwork" {
 
 # Create subnet
 resource "azurerm_subnet" "Subnet" {
-  name                 = "${var.prefix}-subnet-1"
-  resource_group_name  = var.ResourceGroupname
-  virtual_network_name = azurerm_virtual_network.virtualnetwork.name
+  name                 = "${var.prefix}-subnet-01"
+  resource_group_name  = var.resourceGroupName
+  virtual_network_name = azurerm_virtual_network.virtualNetwork.name
   address_prefixes     = ["10.0.2.0/24"]
 }
 
@@ -53,7 +53,7 @@ resource "azurerm_subnet" "Subnet" {
 resource "azurerm_network_security_group" "myNSG" {
   name                = "myNetworkSecurityGroup"
   location            = var.location
-  resource_group_name = var.ResourceGroupname
+  resource_group_name = var.resourceGroupName
 
   security_rule {
     name                       = "SSH"
@@ -87,7 +87,7 @@ resource "azurerm_network_security_group" "myNSG" {
 resource "azurerm_network_interface" "myNI" {
   count               = var.VMCount
   name                = "VM${count.index + 1}"
-  resource_group_name = var.ResourceGroupname
+  resource_group_name = var.resourceGroupName
   location            = var.location
 
   ip_configuration {
@@ -104,7 +104,7 @@ resource "azurerm_network_interface" "myNI" {
 resource "azurerm_public_ip" "PublicIP" {
   name                = "PublicIPForLB"
   location            = var.location
-  resource_group_name = var.ResourceGroupname
+  resource_group_name = var.resourceGroupName
   allocation_method   = "Static"
 
   tags = {
@@ -116,7 +116,7 @@ resource "azurerm_public_ip" "PublicIP" {
 resource "azurerm_lb" "myLB" {
   name                = "LoadBalancer"
   location            = var.location
-  resource_group_name = var.ResourceGroupname
+  resource_group_name = var.resourceGroupName
 
   frontend_ip_configuration {
     name                 = "PublicIPAddress"
@@ -139,7 +139,7 @@ resource "azurerm_lb_rule" "myLBRule" {
   backend_address_pool_ids       = [azurerm_lb_backend_address_pool.IpAdresspool.id]
 
   depends_on = [
-    azurerm_lb.Loadbalancer
+    azurerm_lb.myLB
   ]
 }
 
@@ -164,24 +164,24 @@ resource "azurerm_network_interface_backend_address_pool_association" "backend" 
 resource "azurerm_availability_set" "myAS" {
   name                = "my-aset"
   location            = var.location
-  resource_group_name = var.ResourceGroupname
+  resource_group_name = var.resourceGroupName
 
   tags = {
     Name = "tagging-policy"
   }
 }
 
-resource "azurerm_linux_virtual_machine" "VM" {
+resource "azurerm_linux_virtual_machine" "VitualMachine" {
   count                           = var.VMCount
-  name                            = "VM${count.index + 1}"
+  name                            = "myVM${count.index + 1}"
   location                        = var.location
-  resource_group_name             = var.ResourceGroupname
+  resource_group_name             = var.resourceGroupName
   size                            = "Standard_B1S"
-  admin_username                  = var.UserAccount
+  admin_username                  = var.userAccount
   admin_password                  = var.password
   network_interface_ids           = [element(azurerm_network_interface.myNI.*.id, count.index)]
   disable_password_authentication = false
-  source_image_id                 = data.azurerm_image.search.id
+  source_image_id                 = data.azurerm_image.myImage.id
   availability_set_id             = azurerm_availability_set.myAS.id
   os_disk {
     name                 = "dns${count.index + 1}_OsDisk"

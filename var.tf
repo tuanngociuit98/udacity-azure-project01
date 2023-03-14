@@ -10,12 +10,12 @@ variable "resourceGroupName" {
 
 variable "location" {
   description = "The Azure Region "
-  default     = "East US"
+  default     = "West Europe"
 }
 
 variable "imageName" {
   description = "Name of image"
-  default     = "myPackerImage"
+  default     = "myVMImage"
 }
 # The number of vm that you want
 variable "VMCount" {
@@ -25,7 +25,7 @@ variable "VMCount" {
 
 variable "userAccount" {
   description = "Admin account for VM"
-  default     = "Admin"
+  default     = "adminuser"
 }
 
 variable "password" {

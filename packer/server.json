@@ -1,8 +1,8 @@
 {
     "variables": {
-      "client_id": "27fb77c0-4bd2-462b-b193-cadd76e67d15",
-      "client_secret": "BMc8Q~PsxQxP07-kbpF.YP0RQ3MLzHjAl5KDWaEZ",
-      "subscription_id": "dfbd8d6e-c77f-414e-a3f4-14c567b43de3"
+      "client_id": "45a0ca29-087b-4c1e-b10e-55bb0d4e54e7",
+      "client_secret": "BVL8Q~qed._9zTABM~3ACw2oIUXWHHVkutcHYbDb",
+      "subscription_id": "0a18c62f-d3bc-43d1-8baf-18c6dbdb4e2a"
     },
     "builders": [{
       "type": "azure-arm",
@@ -13,7 +13,7 @@
       "image_publisher": "Canonical",
       "image_offer": "UbuntuServer",
       "image_sku": "18.04-LTS",
-      "managed_image_resource_group_name": "Azuredevops",
+      "managed_image_resource_group_name": "Azuredevops", 
       "build_resource_group_name":"Azuredevops",
       "managed_image_name": "myPackerImage",
       "vm_size": "Standard_DS1_v2",
