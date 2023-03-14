@@ -15,7 +15,7 @@
       "image_sku": "18.04-LTS",
       "managed_image_resource_group_name": "Azuredevops", 
       "build_resource_group_name":"Azuredevops",
-      "managed_image_name": "myPackerImage",
+      "managed_image_name": "myVMImage",
       "vm_size": "Standard_DS1_v2",
       "azure_tags": {
         "Name": "tagging-policy"
